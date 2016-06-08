@@ -32,14 +32,26 @@ class MainHandler(webapp2.RequestHandler):
 
 class CountHandler(webapp2.RequestHandler):
     def get(self):
+        my_variables = {"numbers" : [9,5,5,10]}
         count_template = my_env.get_template('templates/count.html')
-        self.response.write(count_template.render())
+        self.response.write(count_template.render(my_variables))
 
 class PigHandler(webapp2.RequestHandler):
     def get(self):
-        #self.response.write("I can translate your phrases")
+        #put in dictionary, render dictionary, passed to template
         pig_template = my_env.get_template('templates/pig.html')
         self.response.write(pig_template.render())
+
+    def post(self):
+        user_input = self.request.get('user_word')
+        def translatePigLatin(old_word):
+            new_word = old_word[1:] + old_word[0] + "ay"
+            return(new_word)
+        pl_result = translatePigLatin(user_input)
+        translated_words = {"words": pl_result}
+        #put in dictionary, render dictionary, passed to template
+        pig_template = my_env.get_template('templates/pig.html')
+        self.response.write(pig_template.render(translated_words))
 
 #route, address book as to where you find things
 app = webapp2.WSGIApplication([
